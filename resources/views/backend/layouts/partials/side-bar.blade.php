@@ -7,7 +7,12 @@
                     Dashboard
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('category.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
+                    Category
+                </a>
+
+                <a class="nav-link" href="{{ route('course.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-person-chalkboard"></i></div>
                     Course
                 </a>
