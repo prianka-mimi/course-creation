@@ -23,11 +23,17 @@ class StoreCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'         => 'required|string|max:255',
-            'description'   => 'required',
-            'category'      => 'required',
-            'feature_video' => 'nullable',
-            'status'        => 'nullable|in:' . implode(',', array_keys(Course::STATUS_LIST)),
+            'title'                                  => 'required|string|max:255',
+            'category'                               => 'required',
+            'feature_video'                          => 'nullable',
+            'status'                                 => 'nullable|in:' . implode(',', array_keys(Course::STATUS_LIST)),
+            'modules'                                => 'nullable|array',
+            'modules.*.title'                        => 'required|string|max:255',
+            'modules.*.contents'                     => 'nullable|array',
+            'modules.*.contents.*.title'             => 'required|string|max:255',
+            'modules.*.contents.*.video_source_type' => 'nullable|string',
+            'modules.*.contents.*.video_url'         => 'nullable|url',
+            'modules.*.contents.*.video_length'      => 'nullable|string|regex:/^\d{2}:\d{2}:\d{2}$/',
         ];
     }
 }

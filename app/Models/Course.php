@@ -13,6 +13,11 @@ class Course extends Model
 
     protected $guarded = [];
 
+    public function modules()
+    {
+        return $this->hasMany(Module::class);
+    }
+
     public const STATUS_ACTIVE = 1;
     public const STATUS_INACTIVE = 2;
 

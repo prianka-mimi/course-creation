@@ -121,4 +121,136 @@
         });
     });
 </script>
+
+<script>
+$(document).ready(function() {
+    let moduleIndex = $('#modules-container .module-section').length;
+
+    $('#add-module').on('click', function() {
+        addModule();
+    });
+
+    function addModule(existingModule = null, moduleIdx = null) {
+        if (moduleIdx === null) {
+            moduleIdx = moduleIndex++;
+        }
+        let moduleHtml = `
+            <div class="module-section border p-3 mb-3" data-module-index="${moduleIdx}">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6>Module ${moduleIdx + 1}</h6>
+                    <button type="button" class="btn btn-danger btn-sm remove-module">Remove Module</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-4 custom-input-group">
+                            <label for="modules[${moduleIdx}][title]" class="form-label">Module Title</label>
+                            <span class="text-danger">*</span>
+                            <input type="text" name="modules[${moduleIdx}][title]" class="form-control" placeholder="Enter module title" value="${existingModule ? existingModule.title : ''}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="contents-container">
+                    ${existingModule && existingModule.contents ? existingModule.contents.map((content, contentIdx) => generateContentHtml(moduleIdx, contentIdx, content)).join('') : ''}
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-lg-4">
+                        <div class="d-grid">
+                            <button type="button" class="btn theme-button create-button btn-sm add-content"><i class="fa-solid fa-plus"></i> Add Content</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#modules-container').append(moduleHtml);
+    }
+
+    function generateContentHtml(moduleIdx, contentIdx, existingContent = null) {
+        return `
+            <div class="content-section border p-2 mb-2" data-content-index="${contentIdx}">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6>Content ${contentIdx + 1}</h6>
+                    <button type="button" class="btn btn-danger btn-sm remove-content">Remove Content</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="mb-2 custom-input-group">
+                            <label for="modules[${moduleIdx}][contents][${contentIdx}][title]" class="form-label">Content Title</label>
+                            <span class="text-danger">*</span>
+                            <input type="text" name="modules[${moduleIdx}][contents][${contentIdx}][title]" class="form-control" placeholder="Enter content title" value="${existingContent ? existingContent.title : ''}" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="mb-2 custom-input-group">
+                            <label for="modules[${moduleIdx}][contents][${contentIdx}][video_source_type]" class="form-label">Video Source Type</label>
+                            <input type="text" name="modules[${moduleIdx}][contents][${contentIdx}][video_source_type]" class="form-control" placeholder="e.g., YouTube, Vimeo" value="${existingContent ? existingContent.video_source_type : ''}">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="mb-2 custom-input-group">
+                            <label for="modules[${moduleIdx}][contents][${contentIdx}][video_url]" class="form-label">Video URL</label>
+                            <input type="text" name="modules[${moduleIdx}][contents][${contentIdx}][video_url]" class="form-control" placeholder="Enter video URL" value="${existingContent ? existingContent.video_url : ''}">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="mb-2 custom-input-group">
+                            <label for="modules[${moduleIdx}][contents][${contentIdx}][video_length]" class="form-label">Video Length (HH:MM:SS)</label>
+                            <input type="text" name="modules[${moduleIdx}][contents][${contentIdx}][video_length]" class="form-control" placeholder="00:00:00" value="${existingContent ? existingContent.video_length : ''}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    $(document).on('click', '.add-content', function() {
+        let moduleSection = $(this).closest('.module-section');
+        let moduleIdx = moduleSection.data('module-index');
+        let contentIdx = moduleSection.find('.content-section').length;
+        let contentHtml = generateContentHtml(moduleIdx, contentIdx);
+        moduleSection.find('.contents-container').append(contentHtml);
+    });
+
+    $(document).on('click', '.remove-module', function() {
+        $(this).closest('.module-section').remove();
+        updateModuleIndices();
+    });
+
+    $(document).on('click', '.remove-content', function() {
+        $(this).closest('.content-section').remove();
+        updateContentIndices();
+    });
+
+    function updateModuleIndices() {
+        $('#modules-container .module-section').each(function(index) {
+            $(this).attr('data-module-index', index);
+            $(this).find('h6').text(`Module ${index + 1}`);
+            $(this).find('input[name*="modules["]').each(function() {
+                let name = $(this).attr('name');
+                $(this).attr('name', name.replace(/modules\[\d+\]/, `modules[${index}]`));
+            });
+            $(this).find('.content-section').each(function(contentIndex) {
+                updateContentIndex($(this), index, contentIndex);
+            });
+        });
+        moduleIndex = $('#modules-container .module-section').length;
+    }
+
+    function updateContentIndices() {
+        $('.module-section').each(function(moduleIdx) {
+            $(this).find('.content-section').each(function(contentIdx) {
+                updateContentIndex($(this), moduleIdx, contentIdx);
+            });
+        });
+    }
+
+    function updateContentIndex(contentSection, moduleIdx, contentIdx) {
+        contentSection.attr('data-content-index', contentIdx);
+        contentSection.find('h6').text(`Content ${contentIdx + 1}`);
+        contentSection.find('input[name*="contents["]').each(function() {
+            let name = $(this).attr('name');
+            $(this).attr('name', name.replace(/modules\[\d+\]\[contents\]\[\d+\]/, `modules[${moduleIdx}][contents][${contentIdx}]`));
+        });
+    }
+});
+</script>
 @stack('scripts')

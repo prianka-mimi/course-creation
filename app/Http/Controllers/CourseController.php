@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Module;
+use App\Models\Content;
+use App\Manager\Course\ModuleManager;
+use App\Manager\Course\ContentManager;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use Illuminate\Http\RedirectResponse;
@@ -57,7 +61,20 @@ class CourseController extends Controller
     {
         try {
             DB::beginTransaction();
-            (new Course())->storeCourse($request);
+            $course = (new Course())->storeCourse($request);
+
+            if ($request->has('modules')) {
+                foreach ($request->input('modules') as $moduleData) {
+                    $module = (new ModuleManager())->storeModule(new Request($moduleData + ['course_id' => $course->id]));
+
+                    if (isset($moduleData['contents'])) {
+                        foreach ($moduleData['contents'] as $contentData) {
+                            (new ContentManager())->storeContent(new Request($contentData + ['module_id' => $module->id]));
+                        }
+                    }
+                }
+            }
+
             success_alert(__('Course Created Successfully'));
             DB::commit();
         } catch (Throwable $throwable) {
@@ -101,6 +118,7 @@ class CourseController extends Controller
             'button_url'   => route(self::$route . '.index'),
         ];
 
+        $course->load('modules.contents');
         return view('backend.modules.course.edit', compact('cms_content', 'course'));
     }
 
@@ -112,6 +130,21 @@ class CourseController extends Controller
         try {
             DB::beginTransaction();
             (new Course())->updateCourse($request, $course);
+
+            $course->modules()->delete();
+
+            if ($request->has('modules')) {
+                foreach ($request->input('modules') as $moduleData) {
+                    $module = (new ModuleManager())->storeModule(new Request($moduleData + ['course_id' => $course->id]));
+
+                    if (isset($moduleData['contents'])) {
+                        foreach ($moduleData['contents'] as $contentData) {
+                            (new ContentManager())->storeContent(new Request($contentData + ['module_id' => $module->id]));
+                        }
+                    }
+                }
+            }
+
             success_alert(__('Course Updated Successfully'));
             DB::commit();
         } catch (Throwable $throwable) {
