@@ -16,7 +16,7 @@ class DashboardController extends Controller
             'active_title'    => __('Dashboard'),
         ];
 
-        return view('backend.modules.index');
+        return view('backend.modules.index',compact('cms_content'));
     }
 
     /**
