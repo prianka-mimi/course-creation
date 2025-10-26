@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
 use App\Models\Course;
 use App\Models\Module;
 use App\Models\Content;
+use App\Models\Category;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Manager\Course\ModuleManager;
+use Illuminate\Http\RedirectResponse;
 use App\Manager\Course\ContentManager;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class CourseController extends Controller
 {
@@ -33,8 +34,9 @@ class CourseController extends Controller
             'button_url'   => route(self::$route . '.create'),
         ];
 
-        $courses    = (new Course())->getCourseList($request);
-        return view('backend.modules.course.index', compact('cms_content', 'courses'));
+        $courses  = (new Course())->getCourseList($request);
+        $category = (new Category())->getCategoryAssociated();
+        return view('backend.modules.course.index', compact('cms_content', 'courses', 'category'));
     }
 
     /**
@@ -51,7 +53,8 @@ class CourseController extends Controller
             'button_url'   => route(self::$route . '.index'),
         ];
 
-        return view('backend.modules.course.create', compact('cms_content'));
+        $category = (new Category())->getCategoryAssociated();
+        return view('backend.modules.course.create', compact('cms_content', 'category'));
     }
 
     /**
@@ -101,7 +104,8 @@ class CourseController extends Controller
             'button_url'   => route(self::$route . '.index'),
         ];
 
-        return view('backend.modules.course.show', compact('cms_content', 'course'));
+        $category = (new Category())->getCategoryAssociated();
+        return view('backend.modules.course.show', compact('cms_content', 'course', 'category'));
     }
 
     /**
@@ -119,7 +123,8 @@ class CourseController extends Controller
         ];
 
         $course->load('modules.contents');
-        return view('backend.modules.course.edit', compact('cms_content', 'course'));
+        $category = (new Category())->getCategoryAssociated();
+        return view('backend.modules.course.edit', compact('cms_content', 'course', 'category'));
     }
 
     /**

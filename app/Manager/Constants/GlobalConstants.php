@@ -3,7 +3,7 @@
 namespace App\Manager\Constants;
 class GlobalConstants
 {
-    public const DEFAULT_PAGINATION = 20;
+    public const DEFAULT_PAGINATION = 10;
 
     public const STATUS_ACTIVE      = 1;
     public const STATUS_INACTIVE    = 2;

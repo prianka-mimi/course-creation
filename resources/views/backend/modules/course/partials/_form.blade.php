@@ -17,7 +17,7 @@
         <div class="mb-4 custom-input-group">
             {{ html()->label(__('Category'), 'category')->class('form-label') }}
             <x-required />
-            {{ html()->text('category')->id('category')->class('form-control ' . ($errors->has('category') ? ' is-invalid' : null))->placeholder(__('Enter category')) }}
+            {{ html()->select('category', $category, isset($course) ? $course->category : null)->id('category')->class('form-select live-search' . ($errors->has('category') ? ' is-invalid' : null))->multiple()->placeholder(__('Select category')) }}
             @error('category')
                 <x-validation-error :message="$message" />
             @enderror
@@ -53,7 +53,7 @@
                         <h6>{{ __('Module') }} {{ $index + 1 }}</h6>
                         <button type="button" class="btn btn-danger btn-sm remove-module">Remove Module</button>
                     </div>
-                    <div class="row">
+                    <div class="row text-center">
                         <div class="col-lg-6">
                             <div class="mb-4 custom-input-group">
                                 {{ html()->label(__('Module Title'), 'modules[' . $index . '][title]')->class('form-label') }}
