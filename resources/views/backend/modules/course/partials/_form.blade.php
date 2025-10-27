@@ -165,6 +165,7 @@
 
         @if(old('modules'))
             @foreach(old('modules') as $index => $module)
+                @if(!empty($module['title']))
                 <div class="module-section border p-3 mb-3" data-module-index="{{ $index }}">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6>{{ __('Module') }} {{ (int)$index + 1 }}</h6>
@@ -182,6 +183,7 @@
                     <div class="contents-container">
                         @if(isset($module['contents']))
                             @foreach($module['contents'] as $contentIndex => $content)
+                                @if(!empty($content['title']))
                                 <div class="content-section border p-2 mb-2" data-content-index="{{ $contentIndex }}">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6>{{ __('Content') }} {{ (int)$contentIndex + 1 }}</h6>
@@ -256,6 +258,7 @@
                                         @endif
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
                         @endif
                     </div>
@@ -267,6 +270,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             @endforeach
         @endif
     </div>
