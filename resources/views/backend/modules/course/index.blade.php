@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 @php
-    use App\Models\Course;
-    use App\Manager\Constants\GlobalConstants;
+use App\Models\Course;
+use App\Manager\Constants\GlobalConstants;
 @endphp
 @section('content')
     <div class="mt-4 row">
@@ -36,7 +36,11 @@
                                     <strong>{{ $course->title }}</strong>
                                 </td>
                                 <td>
-                                    {{ $course->category }}
+                                    @if($course->category_objects->isNotEmpty())
+                                        @foreach($course->category_objects as $cat)
+                                            <span class="badge bg-info">{{ $cat->name }}</span>
+                                        @endforeach
+                                    @endif
                                 </td>
                                 <td>
                                     <button class="btn btn-sm w-80px"

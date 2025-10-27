@@ -26,7 +26,7 @@
         <div class="mb-4 custom-input-group">
             {{ html()->label(__('Category'), 'category')->class('form-label') }}
             <x-required />
-            {{ html()->select('category', $category, isset($course) ? $course->category : null)->id('category')->class('form-select live-search' . ($errors->has('category') ? ' is-invalid' : null))->multiple()->placeholder(__('Select category')) }}
+            {{ html()->select('category', $category, isset($course) ? $course->categories->pluck('id')->toArray() : null)->id('category')->class('form-select live-search' . ($errors->has('category') ? ' is-invalid' : null))->multiple()->placeholder(__('Select category')) }}
             @error('category')
                 <x-validation-error :message="$message" />
             @enderror
@@ -143,6 +143,113 @@
                                                     <div class="mb-2 custom-input-group">
                                                         {{ html()->label(__('Link URL'), 'modules[' . $index . '][contents][' . $contentIndex . '][link_url]')->class('form-label') }}
                                                         {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][link_url]')->class('form-control')->value($content->link_url)->placeholder(__('Enter link URL')) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-lg-4">
+                            <div class="d-grid">
+                                <button type="button" class="btn theme-button create-button btn-sm add-content"><i class="fa-solid fa-plus"></i> Add Content</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
+        @if(old('modules'))
+            @foreach(old('modules') as $index => $module)
+                <div class="module-section border p-3 mb-3" data-module-index="{{ $index }}">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6>{{ __('Module') }} {{ (int)$index + 1 }}</h6>
+                        <button type="button" class="btn btn-danger btn-sm remove-module">Remove Module</button>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-lg-6">
+                            <div class="mb-4 custom-input-group">
+                                {{ html()->label(__('Module Title'), 'modules[' . $index . '][title]')->class('form-label') }}
+                                <x-required />
+                                {{ html()->text('modules[' . $index . '][title]', $module['title'])->class('form-control')->placeholder(__('Enter module title')) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contents-container">
+                        @if(isset($module['contents']))
+                            @foreach($module['contents'] as $contentIndex => $content)
+                                <div class="content-section border p-2 mb-2" data-content-index="{{ $contentIndex }}">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6>{{ __('Content') }} {{ (int)$contentIndex + 1 }}</h6>
+                                        <button type="button" class="btn btn-danger btn-sm remove-content">Remove Content</button>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-2 custom-input-group">
+                                                {{ html()->label(__('Content Title'), 'modules[' . $index . '][contents][' . $contentIndex . '][title]')->class('form-label') }}
+                                                <x-required />
+                                                {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][title]', $content['title'])->class('form-control')->placeholder(__('Enter content title')) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-2 custom-input-group">
+                                                {{ html()->label(__('Content Type'), 'modules[' . $index . '][contents][' . $contentIndex . '][type]')->class('form-label') }}
+                                                <x-required />
+                                                {{ html()->select('modules[' . $index . '][contents][' . $contentIndex . '][type]', ['text' => 'Text', 'image' => 'Image', 'video' => 'Video', 'link' => 'Link'], $content['type'])->class('form-select content-type-select')->data('content-index', $contentIndex) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="content-fields" data-content-index="{{ $contentIndex }}">
+                                        @if($content['type'] == 'text')
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Content Text'), 'modules[' . $index . '][contents][' . $contentIndex . '][content_text]')->class('form-label') }}
+                                                        {{ html()->textarea('modules[' . $index . '][contents][' . $contentIndex . '][content_text]', $content['content_text'] ?? null)->class('form-control')->placeholder(__('Enter content text'))->rows(3) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif($content['type'] == 'image')
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Image'), 'modules[' . $index . '][contents][' . $contentIndex . '][image_path]')->class('form-label') }}
+                                                        {{ html()->file('modules[' . $index . '][contents][' . $contentIndex . '][image_path]')->class('form-control')->accept('image/*') }}
+                                                        <small class="text-muted">Supported formats: JPEG, JPG, PNG, GIF (Max: 5MB)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif($content['type'] == 'video')
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Video Source Type'), 'modules[' . $index . '][contents][' . $contentIndex . '][video_source_type]')->class('form-label') }}
+                                                        {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][video_source_type]', $content['video_source_type'] ?? null)->class('form-control')->placeholder(__('e.g., YouTube, Vimeo')) }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Video URL'), 'modules[' . $index . '][contents][' . $contentIndex . '][video_url]')->class('form-label') }}
+                                                        {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][video_url]', $content['video_url'] ?? null)->class('form-control')->placeholder(__('Enter video URL')) }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Video Length (HH:MM:SS)'), 'modules[' . $index . '][contents][' . $contentIndex . '][video_length]')->class('form-label') }}
+                                                        {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][video_length]', $content['video_length'] ?? null)->class('form-control')->placeholder(__('00:00:00')) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif($content['type'] == 'link')
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="mb-2 custom-input-group">
+                                                        {{ html()->label(__('Link URL'), 'modules[' . $index . '][contents][' . $contentIndex . '][link_url]')->class('form-label') }}
+                                                        {{ html()->text('modules[' . $index . '][contents][' . $contentIndex . '][link_url]', $content['link_url'] ?? null)->class('form-control')->placeholder(__('Enter link URL')) }}
                                                     </div>
                                                 </div>
                                             </div>

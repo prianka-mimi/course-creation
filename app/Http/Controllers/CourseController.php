@@ -77,13 +77,16 @@ class CourseController extends Controller
             $courseData['feature_video'] = $featureVideoPath ?: $request->input('feature_video');
             $course = (new Course())->storeCourse(new Request($courseData));
 
+            if ($request->has('category') && is_array($request->input('category'))) {
+                $course->categories()->attach($request->input('category'));
+            }
+
             if ($request->has('modules')) {
                 foreach ($request->input('modules') as $moduleIndex => $moduleData) {
                     $module = (new ModuleManager())->storeModule(new Request($moduleData + ['course_id' => $course->id]));
 
                     if (isset($moduleData['contents'])) {
                         foreach ($moduleData['contents'] as $contentIndex => $contentData) {
-                            // Handle image upload for content
                             $imagePath = null;
                             if ($request->hasFile("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")) {
                                 $imagePath = $request->file("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")->store('courses/images', 'public');
@@ -122,6 +125,7 @@ class CourseController extends Controller
             'button_url'   => route(self::$route . '.index'),
         ];
 
+        $course->load('modules.contents');
         $category = (new Category())->getCategoryAssociated();
         return view('backend.modules.course.show', compact('cms_content', 'course', 'category'));
     }
@@ -161,6 +165,11 @@ class CourseController extends Controller
             $courseData = $request->all();
             $courseData['feature_video'] = $featureVideoPath ?: $request->input('feature_video');
             (new Course())->updateCourse(new Request($courseData), $course);
+
+            // Sync categories via pivot table
+            if ($request->has('category') && is_array($request->input('category'))) {
+                $course->categories()->sync($request->input('category'));
+            }
 
             $course->modules()->delete();
 
