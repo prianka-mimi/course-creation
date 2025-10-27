@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
@@ -16,7 +19,27 @@ class DashboardController extends Controller
             'active_title'    => __('Dashboard'),
         ];
 
-        return view('backend.modules.index',compact('cms_content'));
+        $totalCourses = (new Course())->getDashboardCounts()['total'];
+        $activeCourses = (new Course())->getDashboardCounts()['active'];
+        $inactiveCourses = (new Course())->getDashboardCounts()['inactive'];
+
+        $totalCategories = (new Category())->getDashboardCounts()['total'];
+        $activeCategories = (new Category())->getDashboardCounts()['active'];
+        $inactiveCategories = (new Category())->getDashboardCounts()['inactive'];
+
+        $totalUsers = (new User())->getDashboardCounts()['total'];
+        $activeUsers = (new User())->getDashboardCounts()['active'];
+        $inactiveUsers = (new User())->getDashboardCounts()['inactive'];
+
+        $courses = Course::latest()->take(5)->get();
+
+        return view('backend.modules.index', compact('cms_content', 'totalCourses', 'activeCourses', 'inactiveCourses', 'totalCategories', 'activeCategories', 'inactiveCategories', 'totalUsers', 'activeUsers', 'inactiveUsers', 'courses'));
+    }
+
+    final public function userList(Request $request)
+    {
+        $users = (new User())->getUserList($request);
+        return view('backend.modules.user-list', compact('users'));
     }
 
     /**

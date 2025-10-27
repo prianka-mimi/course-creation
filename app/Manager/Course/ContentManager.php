@@ -23,6 +23,10 @@ class ContentManager
         return [
             'module_id'         => $request->input('module_id'),
             'title'             => $request->input('title'),
+            'type'              => $request->input('type'),
+            'content_text'      => $request->input('content_text'),
+            'image_path'        => $request->input('image_path'),
+            'link_url'          => $request->input('link_url'),
             'video_source_type' => $request->input('video_source_type'),
             'video_url'         => $request->input('video_url'),
             'video_length'      => $request->input('video_length'),

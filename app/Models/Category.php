@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Course;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Manager\Constants\GlobalConstants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class Category extends Model
 {
@@ -65,5 +66,18 @@ class Category extends Model
         return self::query()
         ->where('status',self::STATUS_ACTIVE)
         ->pluck('name','id');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+    public function getDashboardCounts()
+    {
+        $total = self::count();
+        $active = self::where('status', self::STATUS_ACTIVE)->count();
+        $inactive = self::where('status', self::STATUS_INACTIVE)->count();
+        return ['total' => $total, 'active' => $active, 'inactive' => $inactive];
     }
 }

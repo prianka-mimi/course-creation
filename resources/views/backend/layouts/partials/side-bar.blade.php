@@ -17,7 +17,7 @@
                     Course
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('user') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user-graduate"></i></div>
                     User
                 </a>

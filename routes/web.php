@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user', [DashboardController::class, 'userList'])->name('user');
     Route::resource('course', CourseController::class);
     Route::resource('category', CategoryController::class);
 });

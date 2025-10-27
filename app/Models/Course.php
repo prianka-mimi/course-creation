@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Manager\Constants\GlobalConstants;
@@ -13,9 +14,16 @@ class Course extends Model
 
     protected $guarded = [];
 
+    // Removed category cast as we're using pivot table now
+
     public function modules()
     {
         return $this->hasMany(Module::class);
+    }
+
+    public function getCategoryObjectsAttribute()
+    {
+        return $this->categories;
     }
 
     public const STATUS_ACTIVE = 1;
@@ -54,7 +62,7 @@ class Course extends Model
     {
         $data           = [
             'title'         => $request->input('title'),
-            'category'      => $request->input('category'),
+            'description'   => $request->input('description'),
             'feature_video' => $request->input('feature_video'),
             'status'        => $request->input('status') ?? self::STATUS_ACTIVE,
         ];
@@ -65,5 +73,18 @@ class Course extends Model
     final public function deleteCourse(Course $course): void
     {
         $course->delete();
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function getDashboardCounts()
+    {
+        $total = self::count();
+        $active = self::where('status', self::STATUS_ACTIVE)->count();
+        $inactive = self::where('status', self::STATUS_INACTIVE)->count();
+        return ['total' => $total, 'active' => $active, 'inactive' => $inactive];
     }
 }
