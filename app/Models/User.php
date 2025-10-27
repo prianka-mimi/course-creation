@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getDashboardCounts()
+    {
+        $total = self::count();
+        $active = self::whereNotNull('email_verified_at')->count();
+        $inactive = self::whereNull('email_verified_at')->count();
+        return ['total' => $total, 'active' => $active, 'inactive' => $inactive];
+    }
 }

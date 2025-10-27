@@ -79,4 +79,12 @@ class Course extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function getDashboardCounts()
+    {
+        $total = self::count();
+        $active = self::where('status', self::STATUS_ACTIVE)->count();
+        $inactive = self::where('status', self::STATUS_INACTIVE)->count();
+        return ['total' => $total, 'active' => $active, 'inactive' => $inactive];
+    }
 }
