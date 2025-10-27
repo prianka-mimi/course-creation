@@ -21,6 +21,11 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user-graduate"></i></div>
                     User
                 </a>
+
+                <a class="nav-link" href="{{ route('welcome') }}">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-globe"></i></div>
+                    Live Site
+                </a>
             </div>
     </nav>
 </div>

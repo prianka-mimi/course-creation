@@ -1,61 +1,225 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Course Creation System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based course creation and management system with modular structure for organizing educational content. This project demonstrates clean architecture, proper separation of concerns, and professional Laravel development practices for building scalable learning platforms.
 
-## About Laravel
+## Author
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[Fatema Akther Prianka 🤗](https://github.com/Prianka-Mimi)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Admin Features
+- **Category Management**: Create, update, delete, and list course categories
+- **Course Management**: Manage courses with titles, descriptions, feature videos, and status
+- **Module Management**: Organize courses into modules for structured learning
+- **Content Management**: Add various content types (text, images, videos, links) to modules
+- **Dashboard**: Statistics overview with counts for categories, courses, modules, and contents
+- **Role-based Access**: Secure admin-only access to management features
 
-## Learning Laravel
+### User Features
+- **Course Browsing**: View available courses with descriptions and categories
+- **Module Navigation**: Access course modules and their contents
+- **Content Viewing**: Support for different content types including videos, text, and images
+- **Category Filtering**: Browse courses by categories
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Technical Features
+- **Modular Architecture**: Courses divided into modules and contents for flexible learning paths
+- **Many-to-Many Relationships**: Courses can belong to multiple categories
+- **Optimized Queries**: Efficient database operations with proper relationships
+- **Request Validation**: Dedicated request classes for data validation
+- **Clean Architecture**: Model-Controller separation with business logic in models
+- **Status Management**: Active/Inactive status for all entities
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Technology Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Framework**: Laravel 12.x
+- **Database**: MySQL
+- **Authentication**: Laravel Breeze (Session-based)
+- **Frontend**: Blade Templates with Tailwind CSS
+- **Development Server**: Laragon
+- **Query Optimization**: Eloquent relationships and eager loading
+- **Authorization**: Breeze
 
-## Laravel Sponsors
+## 🔧 Installation & Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- MySQL
+- Laragon/XAMPP/WAMP
 
-### Premium Partners
+### Step 1: Clone Repository
+```bash
+git clone https://github.com/prianka-mimi/course-creation-system.git
+cd course-creation-system
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Step 2: Install Dependencies
+```bash
+composer install
+npm install && npm run build
+```
 
-## Contributing
+### Step 3: Environment Configuration
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Update `.env` file with your database credentials:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=course_creation_system
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Code of Conduct
+### Step 4: Database Setup
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Step 5: Start Development Server
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+Visit: `http://localhost:8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔐 Default Admin Credentials
+- **Email**: prianka@gmail.com
+- **Password**: 12345678
 
-## License
+## 📡 API Endpoints (If Applicable)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The system primarily uses web interfaces, but RESTful endpoints can be added for API integration.
+
+### Base URL
+```
+http://localhost:8000
+```
+
+## 🏗️ Project Structure
+
+### Models
+- **User**: Handles user authentication and roles
+- **Category**: Manages course categories with many-to-many relationship to courses
+- **Course**: Core entity with modules, categories, and metadata
+- **Module**: Belongs to courses, contains contents
+- **Content**: Various content types (text, image, video, link) belonging to modules
+
+### Controllers
+- **CategoryController**: CRUD operations for categories
+- **CourseController**: Course management with category associations
+- **DashboardController**: Admin dashboard with statistics
+
+### Request Classes
+- **StoreCategoryRequest**: Category creation validation
+- **UpdateCategoryRequest**: Category update validation
+- **StoreCourseRequest**: Course creation validation
+- **UpdateCourseRequest**: Course update validation
+
+### Key Features Implementation
+
+#### Many-to-Many Category Relationships
+- Pivot table `category_course` for flexible category assignments
+- `belongsToMany` relationships in Category and Course models
+- Efficient querying with eager loading
+
+#### Modular Content Structure
+- Hierarchical organization: Course > Module > Content
+- Support for multiple content types (text, image, video, link)
+- Status management for all entities
+
+#### Optimized Database Queries
+- Eager loading with `with()` to prevent N+1 problems
+- Proper indexing on foreign keys
+- Efficient pagination with customizable per_page
+
+#### Clean Architecture
+- Business logic in models and managers
+- Controllers handle HTTP requests/responses
+- Dedicated request classes for validation
+- Consistent data preparation methods
+
+## 🧪 Testing the Application
+
+### Web Interface Testing
+
+1. **Register/Login**: Create user accounts and login
+2. **Create Categories**: Add course categories
+3. **Create Courses**: Add courses with category associations
+4. **Add Modules**: Organize courses into modules
+5. **Add Contents**: Populate modules with various content types
+
+## 📱 Web Interface
+
+### Admin Panel Features
+- Dashboard with statistics cards (total categories, courses, modules, contents)
+- Category management (CRUD operations)
+- Course management with category selection
+- Module management per course
+- Content management with type-specific fields
+- User list and profile management
+
+### User Features
+- Course browsing with category filters
+- Module navigation within courses
+- Content viewing with appropriate rendering for each type
+- Profile editing and password updates
+
+## 🔍 Code Quality Features
+
+- **No N+1 Queries**: Optimized database queries with eager loading
+- **Request Validation**: Separate request classes for each operation
+- **Error Handling**: Comprehensive validation and user feedback
+- **Clean Controllers**: Minimal controller logic, business logic in models
+- **Modular Design**: Separation of concerns with managers and helpers
+- **Consistent Naming**: Professional Laravel conventions throughout
+
+## 📸 Screenshots
+
+![welcome](ss/welcome.png)
+![Login](ss/login.png)
+![Dashboard](ss/dashboard.png)
+![Category](ss/category.png)
+![Course](ss/course.png)
+![Course View](ss/course-view.png)
+![User](ss/user.png)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## ✨ Contact
+
+<div align="left">
+  <a href="https://webdeveloperprianka.netlify.app/" target="_blank"> 
+    <img src="https://img.shields.io/static/v1?message=Portfolio&logo=website&label=&color=E4405F&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="portfolio logo"  />
+  </a>
+  <a href="https://www.linkedin.com/in/fatema-akther-prianka/" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&label=&color=0077B5&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="linkedin logo"  />
+  </a>
+  <a href="https://stackoverflow.com/users/23182049/prianka-mimi" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Stackoverflow&logo=stackoverflow&label=&color=FE7A16&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="stackoverflow logo"  />
+  </a>
+  <a href="https://leetcode.com/u/prianka-mimi/" target="_blank">
+  <img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=white" height="35" alt="LeetCode logo" />
+  </a>
+    <a href="mailto:priankamimi0204@gmail.com" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Gmail&logo=gmail&label=&color=D14836&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="gmail logo"  />
+  </a>
+  <a href="https://discord.com/channels/@me" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Discord&logo=discord&label=&color=7289DA&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="discord logo"  />
+  </a>
+  <a href="https://www.facebook.com/fatemaaktherprianka.webdeveloper" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Facebook&logo=facebook&label=&color=1877F2&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="facebook logo"  />
+  </a>
+</div>

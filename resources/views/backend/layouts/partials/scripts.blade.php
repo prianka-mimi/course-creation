@@ -124,7 +124,20 @@
 
 <script>
 $(document).ready(function() {
-    let moduleIndex = $('#modules-container .module-section').length;
+    let moduleIndex = 0;
+    $('#modules-container .module-section').each(function() {
+        let idx = parseInt($(this).data('module-index'));
+        if (idx >= moduleIndex) moduleIndex = idx + 1;
+    });
+
+    @if(old('modules'))
+        @foreach(old('modules') as $index => $module)
+            @if(!empty($module['title']))
+                let existingModuleIdx = {{ $index }};
+                if (existingModuleIdx >= moduleIndex) moduleIndex = existingModuleIdx + 1;
+            @endif
+        @endforeach
+    @endif
 
     $('#add-module').on('click', function() {
         addModule();
