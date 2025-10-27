@@ -54,6 +54,7 @@ class Course extends Model
     {
         $data           = [
             'title'         => $request->input('title'),
+            'description'   => $request->input('description'),
             'category'      => $request->input('category'),
             'feature_video' => $request->input('feature_video'),
             'status'        => $request->input('status') ?? self::STATUS_ACTIVE,

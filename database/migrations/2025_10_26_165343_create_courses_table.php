@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title')->nullable()->index();
             $table->unsignedBigInteger('category')->nullable()->index();
             $table->string('feature_video')->nullable();
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->nullable()->index();
             $table->timestamps();
         });

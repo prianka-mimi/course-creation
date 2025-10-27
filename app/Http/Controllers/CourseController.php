@@ -10,6 +10,7 @@ use App\Models\Category;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Manager\Course\ModuleManager;
 use Illuminate\Http\RedirectResponse;
 use App\Manager\Course\ContentManager;
@@ -62,16 +63,33 @@ class CourseController extends Controller
      */
     final public function store(StoreCourseRequest $request): RedirectResponse
     {
+        Log::info('Store Request Data:', $request->all());
+
         try {
             DB::beginTransaction();
-            $course = (new Course())->storeCourse($request);
+
+            $featureVideoPath = null;
+            if ($request->hasFile('feature_video')) {
+                $featureVideoPath = $request->file('feature_video')->store('courses/videos', 'public');
+            }
+
+            $courseData = $request->all();
+            $courseData['feature_video'] = $featureVideoPath ?: $request->input('feature_video');
+            $course = (new Course())->storeCourse(new Request($courseData));
 
             if ($request->has('modules')) {
-                foreach ($request->input('modules') as $moduleData) {
+                foreach ($request->input('modules') as $moduleIndex => $moduleData) {
                     $module = (new ModuleManager())->storeModule(new Request($moduleData + ['course_id' => $course->id]));
 
                     if (isset($moduleData['contents'])) {
-                        foreach ($moduleData['contents'] as $contentData) {
+                        foreach ($moduleData['contents'] as $contentIndex => $contentData) {
+                            // Handle image upload for content
+                            $imagePath = null;
+                            if ($request->hasFile("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")) {
+                                $imagePath = $request->file("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")->store('courses/images', 'public');
+                                $contentData['image_path'] = $imagePath;
+                            }
+
                             (new ContentManager())->storeContent(new Request($contentData + ['module_id' => $module->id]));
                         }
                     }
@@ -84,7 +102,7 @@ class CourseController extends Controller
             DB::rollBack();
             app_error_log('Course_CREATED_FAILED', $throwable, 'error');
             failed_alert($throwable->getMessage());
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
         return redirect()->route(self::$route . '.index');
@@ -134,16 +152,30 @@ class CourseController extends Controller
     {
         try {
             DB::beginTransaction();
-            (new Course())->updateCourse($request, $course);
+
+            $featureVideoPath = $course->feature_video;
+            if ($request->hasFile('feature_video')) {
+                $featureVideoPath = $request->file('feature_video')->store('courses/videos', 'public');
+            }
+
+            $courseData = $request->all();
+            $courseData['feature_video'] = $featureVideoPath ?: $request->input('feature_video');
+            (new Course())->updateCourse(new Request($courseData), $course);
 
             $course->modules()->delete();
 
             if ($request->has('modules')) {
-                foreach ($request->input('modules') as $moduleData) {
+                foreach ($request->input('modules') as $moduleIndex => $moduleData) {
                     $module = (new ModuleManager())->storeModule(new Request($moduleData + ['course_id' => $course->id]));
 
                     if (isset($moduleData['contents'])) {
-                        foreach ($moduleData['contents'] as $contentData) {
+                        foreach ($moduleData['contents'] as $contentIndex => $contentData) {
+                            $imagePath = null;
+                            if ($request->hasFile("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")) {
+                                $imagePath = $request->file("modules.{$moduleIndex}.contents.{$contentIndex}.image_path")->store('courses/images', 'public');
+                                $contentData['image_path'] = $imagePath;
+                            }
+
                             (new ContentManager())->storeContent(new Request($contentData + ['module_id' => $module->id]));
                         }
                     }
@@ -156,7 +188,7 @@ class CourseController extends Controller
             DB::rollBack();
             app_error_log('Course_UPDATED_FAILED', $throwable, 'error');
             failed_alert($throwable->getMessage());
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
         return redirect()->route(self::$route . '.index');
