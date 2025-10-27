@@ -116,8 +116,8 @@
             </a>
         </div>
 
-        {{-- <div class="col-lg-3">
-            <a href="{{ route('user.index') }}" target="_blank">
+        <div class="col-lg-3">
+            <a href="{{ route('user') }}" target="_blank">
                 <div class="custom-card d-flex justify-content-between">
                     <div class="card-body">
                         <h6 class="card-title">Users</h6>
@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </a>
-        </div> --}}
+        </div>
     </div>
 
     <div class="row row-gap-2">

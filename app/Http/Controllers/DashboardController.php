@@ -36,6 +36,12 @@ class DashboardController extends Controller
         return view('backend.modules.index', compact('cms_content', 'totalCourses', 'activeCourses', 'inactiveCourses', 'totalCategories', 'activeCategories', 'inactiveCategories', 'totalUsers', 'activeUsers', 'inactiveUsers', 'courses'));
     }
 
+    final public function userList(Request $request)
+    {
+        $users = (new User())->getUserList($request);
+        return view('backend.modules.user-list', compact('users'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
