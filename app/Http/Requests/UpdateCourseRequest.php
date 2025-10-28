@@ -16,6 +16,34 @@ class UpdateCourseRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $modules = $this->input('modules');
+
+        if ($modules) {
+            $filteredModules = array_filter($modules, function ($module) {
+                return !empty($module['title']);
+            });
+
+            foreach ($filteredModules as &$module) {
+                if (!empty($module['contents'])) {
+                    $module['contents'] = array_filter($module['contents'], function ($content) {
+                        return !empty($content['title']);
+                    });
+                }
+            }
+
+            $this->merge([
+                'modules' => array_values($filteredModules),
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -25,7 +53,7 @@ class UpdateCourseRequest extends FormRequest
         return [
             'title'                                   => 'required|string|max:255',
             'description'                             => 'nullable|string',
-            'category'                                => 'required',
+            'category'                                => 'required|array',
             'feature_video'                           => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400', // 100MB max
             'status'                                  => 'nullable|in:' . implode(',', array_keys(Course::STATUS_LIST)),
             'modules'                                 => 'nullable|array',
