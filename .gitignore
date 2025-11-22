@@ -19,8 +19,6 @@
 /storage/*.key
 /storage/pail
 /vendor
-/stubs
-/app/Console/Commands
 Homestead.json
 Homestead.yaml
 Thumbs.db

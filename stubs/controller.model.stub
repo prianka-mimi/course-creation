@@ -1,0 +1,146 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use {{ namespacedRequests }}
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Throwable;
+
+class {{ class }} extends Controller
+{
+    public static string $route = '{{ modelVariable }}';
+
+    /**
+     * Display a listing of the resource.
+     */
+    final public function index(Request $request): View
+    {
+        $cms_content = [
+            'module'       => '{{ model }}',
+            'module_url'   => route(self::$route . '.index'),
+            'active_title' => __('List'),
+            'button_type'  => 'list',
+            'button_title' => __('Create'),
+            'button_url'   => route(self::$route . '.create'),
+        ];
+
+        ${{modelVariable}}s    = (new {{model}}())->get{{model}}List($request);
+        return view('backend.modules.{{ modelVariable }}.index', compact('cms_content', '{{modelVariable}}s'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    final public function create(): View
+    {
+        $cms_content = [
+            'module'       => '{{ model }}',
+            'module_url'   => route(self::$route . '.index'),
+            'active_title' => __('Create'),
+            'button_type'  => 'list',
+            'button_title' => __('List'),
+            'button_url'   => route(self::$route . '.index'),
+        ];
+
+        return view('backend.modules.{{ modelVariable }}.create', compact('cms_content'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    final public function store({{ storeRequest }} $request): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            (new {{model}}())->store{{model}}($request);
+            success_alert(__('{{model}} Created Successfully'));
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            app_error_log('{{model}}_CREATED_FAILED', $throwable, 'error');
+            failed_alert($throwable->getMessage());
+            return redirect()->back();
+        }
+
+        return redirect()->route(self::$route . '.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    final public function show({{ model }} ${{ modelVariable }}): View
+    {
+        $cms_content = [
+            'module'       => '{{ model }}',
+            'module_url'   => route(self::$route . '.index'),
+            'active_title' => __('Details'),
+            'button_type'  => 'list',
+            'button_title' => __('List'),
+            'button_url'   => route(self::$route . '.index'),
+        ];
+
+        return view('backend.modules.{{ modelVariable }}.show', compact('cms_content', '{{modelVariable}}'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    final public function edit({{ model }} ${{ modelVariable }}): View
+    {
+        $cms_content = [
+            'module'       => '{{ model }}',
+            'module_url'   => route(self::$route . '.index'),
+            'active_title' => __('Edit'),
+            'button_type'  => 'list',
+            'button_title' => __('List'),
+            'button_url'   => route(self::$route . '.index'),
+        ];
+
+        return view('backend.modules.{{ modelVariable }}.edit', compact('cms_content', '{{ modelVariable }}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    final public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }}):RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            (new {{model}}())->update{{model}}($request, ${{modelVariable}});
+            success_alert(__('{{model}} Updated Successfully'));
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            app_error_log('{{model}}_UPDATED_FAILED', $throwable, 'error');
+            failed_alert($throwable->getMessage());
+            return redirect()->back();
+        }
+
+        return redirect()->route(self::$route . '.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    final public function destroy({{ model }} ${{ modelVariable }}): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            (new {{model}}())->delete{{model}}(${{modelVariable}});
+            success_alert(__('{{model}} Deleted Successfully'));
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            app_error_log('{{model}}_DELETED_FAILED', $throwable, 'error');
+            failed_alert($throwable->getMessage());
+            return redirect()->back();
+        }
+
+        return redirect()->back();
+    }
+}

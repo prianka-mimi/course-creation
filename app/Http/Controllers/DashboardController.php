@@ -19,17 +19,17 @@ class DashboardController extends Controller
             'active_title'    => __('Dashboard'),
         ];
 
-        $totalCourses = (new Course())->getDashboardCounts()['total'];
-        $activeCourses = (new Course())->getDashboardCounts()['active'];
-        $inactiveCourses = (new Course())->getDashboardCounts()['inactive'];
+        $totalCourses       = (new Course())->getDashboardCounts()['total'];
+        $activeCourses      = (new Course())->getDashboardCounts()['active'];
+        $inactiveCourses    = (new Course())->getDashboardCounts()['inactive'];
 
-        $totalCategories = (new Category())->getDashboardCounts()['total'];
-        $activeCategories = (new Category())->getDashboardCounts()['active'];
+        $totalCategories    = (new Category())->getDashboardCounts()['total'];
+        $activeCategories   = (new Category())->getDashboardCounts()['active'];
         $inactiveCategories = (new Category())->getDashboardCounts()['inactive'];
 
-        $totalUsers = (new User())->getDashboardCounts()['total'];
-        $activeUsers = (new User())->getDashboardCounts()['active'];
-        $inactiveUsers = (new User())->getDashboardCounts()['inactive'];
+        $totalUsers         = (new User())->getDashboardCounts()['total'];
+        $activeUsers        = (new User())->getDashboardCounts()['active'];
+        $inactiveUsers      = (new User())->getDashboardCounts()['inactive'];
 
         $courses = Course::latest()->take(5)->get();
 

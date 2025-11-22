@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\BookingController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user', [DashboardController::class, 'userList'])->name('user');
     Route::resource('course', CourseController::class);
     Route::resource('category', CategoryController::class);
+    Route::resource('blog', BlogController::class);
 });
 
 require __DIR__ . '/auth.php';

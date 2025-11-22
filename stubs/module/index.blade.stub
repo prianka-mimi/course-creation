@@ -1,0 +1,71 @@
+@extends('backend.layouts.app')
+@php
+    use App\Models\STUB;
+    use App\Manager\Constants\GlobalConstants;
+@endphp
+@section('content')
+    <div class="mt-4 row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-stripped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (${{module}}s->isEmpty())
+                            <tr style="background-color: #f2f2f2;">
+                                <td colspan="12">
+                                    <div class="text-center text-danger fs-6">
+                                        {{ __('No {{module}} Data Found.') }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
+                        @foreach (${{module}}s as ${{module}})
+                            <tr>
+                                <td class="text-center">
+                                    <x-serial :serial="$loop->iteration" :collection="${{module}}s" />
+                                </td>
+                                <td>
+                                    <strong>{{ ${{module}}->name }}</strong>
+                                    <p class="text-success small">{{ ${{module}}->slug }}</p>
+                                </td>
+                                <td>
+                                    {{ ${{module}}->description }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm w-80px"
+                                        style="background-color: {{ GlobalConstants::STATUS_LIST_COLOR[${{module}}->status] }};border:none;">
+                                        {{ STUB::STATUS_LIST[${{module}}->status] ?? '' }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ route('{{module}}.show', ${{module}}->id) }}" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('{{module}}.edit', ${{module}}->id) }}" class="mx-1 btn btn-sm btn-warning">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        {{ html()->form('DELETE', route('{{module}}.destroy', ${{module}}->id))->open() }}
+                                        <button type="button" class="btn btn-sm btn-danger delete-btn">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        {{ html()->form()->close() }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{ ${{module}}s->links() }}
+            </div>
+        </div>
+    </div>
+@endsection

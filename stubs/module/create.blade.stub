@@ -1,0 +1,7 @@
+@extends('backend.layouts.app')
+@section('content')
+    {{ html()->form('POST', route('{{module}}.store'))->acceptsFiles()->open() }}
+    @include('backend.modules.{{module}}.partials._form')
+    <x-create-button />
+    {{ html()->form()->close() }}
+@endsection

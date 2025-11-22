@@ -1,0 +1,70 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use App\Manager\Constants\GlobalConstants;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class {{ class }} extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 2;
+
+    public const STATUS_LIST = [
+        self::STATUS_ACTIVE => 'Active',
+        self::STATUS_INACTIVE => 'Inactive',
+    ];
+
+    public function get{{ class }}List(Request $request, array|null $columns = null)
+    {
+        return self::query()->paginate($request->input('per_page', GlobalConstants::DEFAULT_PAGINATION));
+    }
+
+    /**
+     * @param Request $request
+     * @return Model
+     */
+    final public function store{{ class }}(Request $request): Model
+    {
+        return self::query()->create($this->prepareData($request));
+    }
+
+    public function update{{ class }}(Request $request, {{ class }} ${{ class }})
+    {
+        return ${{ class }}->update($this->prepareData($request, ${{ class }}));
+    }
+
+    /**
+     * @param Request $request
+     * @param {{ class }}|null ${{ class }}
+     * @return array
+     */
+    private function prepareData(Request $request, {{ class }} ${{ class }} = null): array
+    {
+        $data = [
+            'name'              => $request->input('name'),
+            'description'       => $request->input('description'),
+            'status'            => $request->input('status') ?? self::STATUS_ACTIVE,
+        ];
+
+        return $data;
+    }
+
+    final public function delete{{ class }}({{ class }} ${{ class }}): void
+    {
+        ${{ class }}->delete();
+    }
+
+    final public function get{{ class }}Associated()
+    {
+        return self::query()
+        ->where('status',self::STATUS_ACTIVE)
+        ->pluck('name','id');
+    }
+}

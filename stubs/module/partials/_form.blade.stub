@@ -1,0 +1,45 @@
+@php
+    use App\Models\STUB;
+@endphp
+
+<div class="mt-4 row">
+    <div class="col-lg-4">
+        <div class="mb-4 custom-input-group">
+            {{ html()->label(__('Name'), 'name')->class('form-label') }}
+            <x-required />
+            {{ html()->text('name')->id('name')->class('form-control ' . ($errors->has('name') ? ' is-invalid' : null))->placeholder(__('Enter name')) }}
+            @error('name')
+                <x-validation-error :message="$message" />
+            @enderror
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="mb-4 custom-input-group">
+            {{ html()->label(__('Category'), 'category')->class('form-label') }}
+            <x-required />
+            {{ html()->select('category', $getCategoryAssociates)->id('category')->class('form-select ' . ($errors->has('category') ? ' is-invalid' : null))->placeholder(__('Select category')) }}
+            @error('category')
+                <x-validation-error :message="$message" />
+            @enderror
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="mb-4 custom-input-group">
+            {{ html()->label(__('Status'), 'status')->class('form-label') }}
+            {{ html()->select('status', STUB::STATUS_LIST, isset(${{module}}) ? ${{module}}->status : STUB::STATUS_ACTIVE)->id('status')->class('form-select ' . ($errors->has('status') ? ' is-invalid' : null))->placeholder(__('Select status')) }}
+            @error('status')
+                <x-validation-error :message="$message" />
+            @enderror
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="mb-3 form-group">
+            {{ html()->label(__('Description'))->for('description') }}
+            <x-required />
+            {{ html()->text('description')->id('description')->class('form-control tinymce ' . ($errors->has('description') ? ' is-invalid' : null))->placeholder(__('e.g., Description')) }}
+            @error('description')
+                <x-validation-error :message="$message" />
+            @enderror
+        </div>
+    </div>
+</div>

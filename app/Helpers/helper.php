@@ -3,6 +3,7 @@
 // namespace App\Helpers;
 
 // use Throwable;
+use App\Manager\ImageUploadManager;
 use Illuminate\Support\Facades\Log;
 
 function app_error_log(string $name, Throwable $throwable, string $type = 'info'): void
@@ -27,3 +28,7 @@ function failed_alert($message): void
     session()->flash('class', 'warning');
 }
 
+function get_image(string|null $path): string
+{
+    return ImageUploadManager::get_image($path);
+}
